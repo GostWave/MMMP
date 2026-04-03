@@ -118,7 +118,7 @@ def main():
 
     pause_sim('Query?')
     start_time = time.time()
-    paths = prm.query()
+    paths, l_t, q_t = prm.query()
     query_duration = time.time()-start_time
     if not paths:
         print("Solution not found")

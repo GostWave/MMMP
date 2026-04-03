@@ -226,3 +226,42 @@ This project is licensed under the MIT License.
 ![GitHub last commit](https://img.shields.io/github/last-commit/ViktorLaurens/MMMP)
 ![GitHub issues](https://img.shields.io/github/issues/ViktorLaurens/MMMP)
 ![GitHub license](https://img.shields.io/github/license/ViktorLaurens/MMMP)
+
+
+## Запуск с помощью Docker
+
+### Загрузка репозитория
+
+```bash
+git clone https://github.com/GostWave/MMMP.git
+cd MMMP/
+```
+
+
+### Сборка образа
+
+```bash
+docker build -t mmmp .
+```
+
+### Запуск
+
+```bash
+docker run -it \
+    -e DISPLAY=$DISPLAY \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    mmmp
+```
+
+
+### Запуск конкретного модуля
+
+```bash
+docker run -it \
+    -e DISPLAY=$DISPLAY \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    mmmp \
+    ./venv/bin/python -m sims.cbs_prm
+```
+
+---
