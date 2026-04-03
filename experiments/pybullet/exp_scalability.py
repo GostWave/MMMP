@@ -765,7 +765,7 @@ def get_setup_image():
     rgbim_no_alpha = rgbim.convert('RGB')
 
     # Save the image
-    directory = r'C:\Users\vikto\OneDrive - Vrije Universiteit Brussel\VUB\Thesis\Pictures'
+    directory = directory = os.path.join(os.path.dirname(__file__), '../../res/images')
     rgbim_no_alpha.save(f'{directory}/{obj_name}_rgb_{counter}.jpg')
     plt.imsave(f'{directory}/{obj_name}_depth_{counter}.jpg', depth_buffer_opengl)
 
