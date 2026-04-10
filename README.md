@@ -244,6 +244,13 @@ cd MMMP/
 docker build -t mmmp .
 ```
 
+Или через docker compose
+
+```bash
+docker compose build
+```
+
+
 ### Запуск
 
 ```bash
@@ -251,6 +258,12 @@ docker run -it \
     -e DISPLAY=$DISPLAY \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
     mmmp
+```
+
+Или можно запускать через docker compose
+
+```bash
+docker compose run mmmp
 ```
 
 
