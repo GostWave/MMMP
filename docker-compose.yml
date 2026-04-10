@@ -1,0 +1,13 @@
+services:
+  mmmp:
+    build: .
+    image: mmmp
+    stdin_open: true
+    tty: true
+    environment:
+      - DISPLAY=$DISPLAY
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ./res/images:/app/res/images
+      - ./res/gifs:/app/res/gifs
+      - ./res/videos:/app/res/videos
