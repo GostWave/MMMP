@@ -8,6 +8,16 @@ services:
       - DISPLAY=$DISPLAY
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
+      - ./robots:/app/robots
+      - ./planners:/app/planners
+      - ./utils:/app/utils
+      - ./sims:/app/sims
+      - ./experiments:/app/experiments
+      - ./tests:/app/tests
+      - ./models:/app/models
+      - ./pybullet-feature:/app/pybullet-feature
+      - ./main.py:/app/main.py
+      - ./plot.py:/app/plot.py
       - ./res/images:/app/res/images
       - ./res/gifs:/app/res/gifs
       - ./res/videos:/app/res/videos

@@ -1,0 +1,11 @@
+{
+    "table_distance": 1.02,
+    "cube_spacing": 0.45,
+    "robot_z_height": 0.75,
+    "cube_z_height": 0.375,
+    "wall_z_1": 1.0,
+    "wall_z_2": 0.5,
+    "wall_x_1": 0.45,
+    "wall_x_2": -0.55,
+    "wall_x_3": -0.3
+}

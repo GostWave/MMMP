@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="soda_can_soft">
+  <link name="base_link">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+       <mass value="0.355"/>
+       <inertia ixx="0.00001" ixy="0" ixz="0" iyy="0.00001" iyz="0" izz="0.00001"/>
+    </inertial>
+    
+    <visual>
+      <geometry>
+        <mesh filename="soda_can.obj" scale="0.00875 0.00875 0.00875"/>
+      </geometry>
+    </visual>
+    
+    <soft_body>
+      <mesh filename="soda_can.obj"/>
+      <scale value="0.00875"/>
+      <collision_margin value="0.001"/> 
+      <stiffness value="20000"/>         
+      <use_face_contact value="1"/>
+      <damping value="0.5"/>
+    </soft_body>
+  </link>
+</robot>

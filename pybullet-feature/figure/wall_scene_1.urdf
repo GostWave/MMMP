@@ -1,0 +1,22 @@
+<robot name="simple_box2">
+  <link name="cube">
+    <inertial>
+      <origin xyz="0 0 0" /> 
+      <mass value="100.0" />
+      <inertia  ixx="0.0" ixy="0.0"  ixz="0.0"  iyy="0.0"  iyz="0.0"  izz="0.0" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="0.75 0.03 0.5" />
+      </geometry>
+      <material name="red"><color rgba="1 0 0 1"/></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="0.75 0.03 0.5" />
+      </geometry>
+    </collision>
+  </link>
+</robot>

@@ -1,0 +1,387 @@
+<?xml version="1.0" ?>
+<robot name="four_tables_circle">
+
+  <link name="world" />
+
+<!--Стол №1-->
+  <link name="table_1">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="45.0"/>
+      <inertia ixx="1.0" ixy="0" ixz="0" iyy="1.0" iyz="0" izz="1.0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0.7" rpy="0 0 0"/>
+      <geometry><box size="1.2 0.75 0.05"/></geometry>
+      <material name="wood"><color rgba="0.6 0.4 0.2 1"/></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.7" rpy="0 0 0"/>
+      <geometry><box size="1.2 0.75 0.05"/></geometry>
+    </collision>
+    <visual> <origin xyz="0 0 0.35" rpy="0 0 0"/>
+      <geometry><box size="1.0 0.5 0.7"/></geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.7" rpy="0 0 0"/>
+      <geometry><box size="1.0 0.5 0.7"/></geometry>
+    </collision>
+  </link>
+
+  <joint name="joint_table_1" type="fixed">
+    <parent link="world"/>
+    <child link="table_1"/>
+    <origin xyz="0.8 0 0" rpy="0 0 1.57"/>
+  </joint>
+
+<!--Стол №2-->
+  <link name="table_2">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="45.0"/>
+      <inertia ixx="1.0" ixy="0" ixz="0" iyy="1.0" iyz="0" izz="1.0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0.7" rpy="0 0 0"/>
+      <geometry><box size="1.2 0.75 0.05"/></geometry>
+      <material name="wood"><color rgba="0.6 0.4 0.2 1"/></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.7" rpy="0 0 0"/>
+      <geometry><box size="1.2 0.75 0.05"/></geometry>
+    </collision>
+    <visual> <origin xyz="0 0 0.35" rpy="0 0 0"/>
+      <geometry><box size="1.0 0.5 0.7"/></geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.7" rpy="0 0 0"/>
+      <geometry><box size="1.0 0.5 0.7"/></geometry>
+    </collision>
+  </link>
+
+  <joint name="joint_table_2" type="fixed">
+    <parent link="world"/>
+    <child link="table_2"/>
+    <origin xyz="0 1.3 0" rpy="0 0 0"/> 
+  </joint>
+
+<!--Стол №3-->
+  <link name="table_3">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="45.0"/>
+      <inertia ixx="1.0" ixy="0" ixz="0" iyy="1.0" iyz="0" izz="1.0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0.7" rpy="0 0 0"/>
+      <geometry><box size="1.2 0.75 0.05"/></geometry>
+      <material name="wood"><color rgba="0.6 0.4 0.2 1"/></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.7" rpy="0 0 0"/>
+      <geometry><box size="1.2 0.75 0.05"/></geometry>
+    </collision>
+    <visual> <origin xyz="0 0 0.35" rpy="0 0 0"/>
+      <geometry><box size="1.0 0.5 0.7"/></geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.7" rpy="0 0 0"/>
+      <geometry><box size="1.0 0.5 0.7"/></geometry>
+    </collision>
+  </link>
+
+  <joint name="joint_table_3" type="fixed">
+    <parent link="world"/>
+    <child link="table_3"/>
+    <origin xyz="-0.8 0 0" rpy="0 0 1.57"/> </joint>
+
+<!--Стол №4-->
+  <link name="table_4">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="45.0"/>
+      <inertia ixx="1.0" ixy="0" ixz="0" iyy="1.0" iyz="0" izz="1.0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0.7" rpy="0 0 0"/>
+      <geometry><box size="1.2 0.75 0.05"/></geometry>
+      <material name="wood"><color rgba="0.6 0.4 0.2 1"/></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.7" rpy="0 0 0"/>
+      <geometry><box size="1.2 0.75 0.05"/></geometry>
+    </collision>
+    <visual> <origin xyz="0 0 0.35" rpy="0 0 0"/>
+      <geometry><box size="1.0 0.5 0.7"/></geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.7" rpy="0 0 0"/>
+      <geometry><box size="1.0 0.5 0.7"/></geometry>
+    </collision>
+  </link>
+
+  <joint name="joint_table_4" type="fixed">
+    <parent link="world"/>
+    <child link="table_4"/>
+    <origin xyz="0 -1.3 0" rpy="0 0 0"/>
+ </joint>
+
+ <!--Кубик №1-->
+ <link name="cube_1">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="45.0"/>
+      <inertia ixx="1.0" ixy="0" ixz="0" iyy="1.0" iyz="0" izz="1.0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><box size="0.4 0.4 0.75"/></geometry>
+      <material name="white"><color rgba="1 1 1 1"/></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><box size="0.4 0.4 0.75"/></geometry>
+    </collision>
+ </link>
+
+  <joint name="joint_cube_1" type="fixed">
+    <parent link="world"/>
+    <child link="cube_1"/>
+    <origin xyz="0 -0.45 0.375" rpy="0 0 0"/>
+ </joint>
+
+ <!--Кубик №2-->
+ <link name="cube_2">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="45.0"/>
+      <inertia ixx="1.0" ixy="0" ixz="0" iyy="1.0" iyz="0" izz="1.0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><box size="0.4 0.4 0.75"/></geometry>
+      <material name="white"><color rgba="1 1 1 1"/></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><box size="0.4 0.4 0.75"/></geometry>
+    </collision>
+ </link>
+
+  <joint name="joint_cube_2" type="fixed">
+    <parent link="world"/>
+    <child link="cube_2"/>
+    <origin xyz="0 0 0.375" rpy="0 0 0"/>
+ </joint> 
+
+ <!--Кубик №3-->
+ <link name="cube_3">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="45.0"/>
+      <inertia ixx="1.0" ixy="0" ixz="0" iyy="1.0" iyz="0" izz="1.0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><box size="0.4 0.4 0.75"/></geometry>
+      <material name="white"><color rgba="1 1 1 1"/></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><box size="0.4 0.4 0.75"/></geometry>
+    </collision>
+ </link>
+
+ <joint name="joint_cube_3" type="fixed">
+    <parent link="world"/>
+    <child link="cube_3"/>
+    <origin xyz="0 0.45 0.375" rpy="0 0 0"/>
+ </joint> 
+
+<!-- Микроволновка на столе №1 -->
+ <link name="microwave_1">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="5.0"/> <inertia ixx="0.1" ixy="0" ixz="0" iyy="0.1" iyz="0" izz="0.1"/>
+    </inertial>
+    
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+            <mesh filename="microwave.stl" scale="0.0009 0.0009 0.0009"/>
+        </geometry>
+        <material name="gray">
+            <color rgba="0.3 0.3 0.3 1.0" />
+        </material>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="microwave.stl" scale="0.0009 0.0009 0.0009"/>
+      </geometry>
+    </collision>
+</link>
+
+  <joint name="joint_micro_1" type="fixed">
+    <parent link="table_1"/>
+    <child link="microwave_1"/>
+    <origin xyz="0 0 0.75" rpy="0 0 0"/>
+ </joint> 
+
+ <!-- Микроволновка на столе №3 -->
+ <link name="microwave_3">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="5.0"/> <inertia ixx="0.1" ixy="0" ixz="0" iyy="0.1" iyz="0" izz="0.1"/>
+    </inertial>
+    
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+            <mesh filename="microwave.stl" scale="0.0009 0.0009 0.0009"/>
+        </geometry>
+        <material name="gray">
+            <color rgba="0.3 0.3 0.3 1.0" />
+        </material>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="microwave.stl" scale="0.0009 0.0009 0.0009"/>
+      </geometry>
+    </collision>
+</link>
+
+  <joint name="joint_micro_3" type="fixed">
+    <parent link="table_3"/>
+    <child link="microwave_3"/>
+    <origin xyz="0.25 0 0.75" rpy="0 0 2.62"/>
+ </joint> 
+
+ <!-- Духовка на столе №4 -->
+ <link name="oven_4">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="5.0"/> <inertia ixx="0.1" ixy="0" ixz="0" iyy="0.1" iyz="0" izz="0.1"/>
+    </inertial>
+    
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+            <mesh filename="oven_open.stl" scale="0.0009 0.0009 0.0009"/>
+        </geometry>
+        <material name="gray">
+            <color rgba="0.3 0.3 0.3 1.0" />
+        </material>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="oven_open.stl" scale="0.0009 0.0009 0.0009"/>
+      </geometry>
+    </collision>
+</link>
+
+  <joint name="joint_oven_4" type="fixed">
+    <parent link="table_4"/>
+    <child link="oven_4"/>
+    <origin xyz="-0.1 0 0.75" rpy="0 0 0"/>
+ </joint> 
+
+  <!-- Духовка на столе №2 -->
+ <link name="oven_2">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="5.0"/> <inertia ixx="0.1" ixy="0" ixz="0" iyy="0.1" iyz="0" izz="0.1"/>
+    </inertial>
+    
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+            <mesh filename="oven_open.stl" scale="0.0009 0.0009 0.0009"/>
+        </geometry>
+        <material name="gray">
+            <color rgba="0.3 0.3 0.3 1.0" />
+        </material>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="oven_open.stl" scale="0.0009 0.0009 0.0009"/>
+      </geometry>
+    </collision>
+</link>
+
+  <joint name="joint_oven_2" type="fixed">
+    <parent link="table_2"/>
+    <child link="oven_2"/>
+    <origin xyz="0.25 0 0.75" rpy="0 0 3.14"/>
+ </joint> 
+
+  <!-- Гриль на столе №2 -->
+ <link name="grill_2">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="5.0"/> <inertia ixx="0.1" ixy="0" ixz="0" iyy="0.1" iyz="0" izz="0.1"/>
+    </inertial>
+    
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+            <mesh filename="grill_open.stl" scale="0.0009 0.0009 0.0009"/>
+        </geometry>
+        <material name="gray">
+            <color rgba="0.3 0.3 0.3 1.0" />
+        </material>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="grill_open.stl" scale="0.0009 0.0009 0.0009"/>
+      </geometry>
+    </collision>
+</link>
+
+  <joint name="joint_grill_2" type="fixed">
+    <parent link="table_2"/>
+    <child link="grill_2"/>
+    <origin xyz="-0.25 -0.2 0.75" rpy="0 0 0"/>
+ </joint> 
+
+   <!-- Гриль на столе №3 -->
+ <link name="grill_3">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="5.0"/> <inertia ixx="0.1" ixy="0" ixz="0" iyy="0.1" iyz="0" izz="0.1"/>
+    </inertial>
+    
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+            <mesh filename="grill_open.stl" scale="0.0009 0.0009 0.0009"/>
+        </geometry>
+        <material name="gray">
+            <color rgba="0.3 0.3 0.3 1.0" />
+        </material>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="grill_open.stl" scale="0.0009 0.0009 0.0009"/>
+      </geometry>
+    </collision>
+</link>
+
+  <joint name="joint_grill_3" type="fixed">
+    <parent link="table_3"/>
+    <child link="grill_3"/>
+    <origin xyz="-0.4 -0.1 0.75" rpy="0 0 0"/>
+ </joint> 
+
+</robot>
