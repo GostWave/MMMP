@@ -46,8 +46,9 @@ def main():
     add_data_path()
     set_camera_pose(camera_point=[0, -1.2, 1.2])
 
-    panda1 = Panda(base_position=(0.7, 0, 0.01), base_orientation=(0, 0, 1, 0))  # Specify base position and orientation for robot1
-    panda2 = Panda(base_position=(-0.7, 0, 0.01), base_orientation=(0, 0, 0, 1))  # Specify base position and orientation for robot2
+    panda1 = Panda(base_position=(-0.21, 0, 0.75), base_orientation=(0, 0, 1, 0))  # Specify base position and orientation for robot1
+    panda2 = Panda(base_position=(0.21, 0.21, 0.75), base_orientation=(0, 0, 0, 1))  # Specify base position and orientation for robot2
+    panda2 = Panda(base_position=(0.21, -0.21, 0.75), base_orientation=(0, 0, 0, 1))
 
     ground = p.loadURDF("plane.urdf")
     scene_objects = load_scene()
