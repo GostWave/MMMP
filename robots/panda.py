@@ -208,20 +208,37 @@ class Panda(Robot):
         return calculate_closest_ik(self.r_id, self.tool_link, targetPose, initialJointPositions)[:-2]
     
     def solve_ik(self, target_position, target_orientation, default_joint_positions):
-        joint_poses = p.calculateInverseKinematics(
-        self.r_id, 
-        endEffectorLinkIndex=8,  # End effector link index for Panda
-        targetPosition=target_position, 
-        targetOrientation=target_orientation,
-        lowerLimits=[-2.7437, -1.7837, -2.9007, -3.0421, -2.8065, 0.5445, -3.0159],
-        upperLimits=[2.7437, 1.7837, 2.9007, -0.1518, 2.8065, 4.5169, 3.0159],
-        jointRanges=[5.4874, 3.5674, 5.8014, 2.8903, 5.6130, 3.9724, 6.0318],
-        restPoses=default_joint_positions,
-        jointDamping=[1e-3, 1e-3, 1e+4, 1e-3, 1e+4, 1e+0, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6], 
-        maxNumIterations=2000,
-        residualThreshold=1e-4
-        )
-        return joint_poses[:7]
+        lower = [-2.7437, -1.7837, -2.9007, -3.0421, -2.8065, 0.5445, -3.0159]
+        upper = [2.7437, 1.7837, 2.9007, -0.1518, 2.8065, 4.5169, 3.0159]
+        rest = list(default_joint_positions)
+        best = None
+        for _ in range(200):
+            joint_poses = p.calculateInverseKinematics(
+                self.r_id,
+                endEffectorLinkIndex=self.tool_link,
+                targetPosition=target_position,
+                targetOrientation=target_orientation,
+                lowerLimits=lower,
+                upperLimits=upper,
+                jointRanges=[5.4874, 3.5674, 5.8014, 2.8903, 5.6130, 3.9724, 6.0318],
+                restPoses=rest,
+                jointDamping=[0.1] * 12,
+                maxNumIterations=2000,
+                residualThreshold=1e-4
+            )
+            result = list(joint_poses[:7])
+            for i in range(7):
+                while result[i] > upper[i]:
+                    result[i] -= 2 * np.pi
+                while result[i] < lower[i]:
+                    result[i] += 2 * np.pi
+            result = tuple(result)
+            if all(lower[i] <= result[i] <= upper[i] for i in range(7)):
+                return result
+            if best is None:
+                best = result
+            rest = list(np.random.uniform(lower, upper))
+        return best if best is not None else joint_poses[:7]
 
     # DISTANCE METRICS
     def distance_metric(self, q1, q2):

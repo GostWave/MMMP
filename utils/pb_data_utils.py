@@ -44,12 +44,21 @@ def load_roadmap(filename):
             neighbors = [
                 tuple(map(float, re.findall(float_pattern, neighbor)))
                 for neighbor in neighbors_part.split('),(')
+                if re.findall(float_pattern, neighbor)
             ]
             
             # Update the roadmap dictionary
             roadmap[node] = neighbors
 
     return roadmap
+
+def save_roadmap(roadmap, filename):
+    os.makedirs(os.path.dirname(os.path.abspath(filename)), exist_ok=True)
+    with open(filename, 'w') as f:
+        for node, neighbors in roadmap.items():
+            s = "(" + ",".join(str(v) for v in node) + "):"
+            s += ",".join("(" + ",".join(str(v) for v in nb) + ")" for nb in neighbors)
+            f.write(s + "\n")
 
 # Video and GIF creation
 def save_video(frames, directory, filename, fps=30):

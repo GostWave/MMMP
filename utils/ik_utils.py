@@ -24,7 +24,7 @@ def calculate_ik(robotId, eeIndex, targetPose):
 
 def calculate_closest_ik(robotId, eeIndex, targetPose, initialJointPositions):
     targetPosition, targetOrientation = targetPose
-    return p.calculateInverseKinematics(robotId, eeIndex, targetPosition, targetOrientation, restPoses=initialJointPositions)
+    return p.calculateInverseKinematics(robotId, eeIndex, targetPosition, targetOrientation, restPoses=initialJointPositions, maxNumIterations=2000, residualThreshold=1e-4)
 
 # def calculate_arm_ik(robotId, eeIndex, targetPose): 
 #     return calculate_ik(robotId, eeIndex, targetPose)[:-2]

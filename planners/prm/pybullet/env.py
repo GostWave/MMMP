@@ -18,15 +18,6 @@ class Environment:
         self.robot_models = [agent["model"] for agent in agents]
         self.obstacles = obstacles
 
-        # Initialize robot positions
-        for i, agent in enumerate(agents):
-            this_model = self.robot_models[i]
-            this_model.set_arm_pose(agent["goal"])
-        # check for collision
-        for i, agent in enumerate(agents):
-            this_model = self.robot_models[i]
-            if self.robot_collision(this_model):
-                raise ValueError(f"Agent {agent['name']} start configuration is in collision.")
 
     def reset_robots(self):
         for i, agent in enumerate(self.agents):

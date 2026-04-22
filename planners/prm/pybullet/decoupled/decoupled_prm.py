@@ -19,7 +19,7 @@ import pybullet as p
 from scipy.spatial import KDTree
 from planners.prm.pybullet.utils import Node
 from robots.panda import Panda
-from utils.pb_data_utils import load_roadmap
+from utils.pb_data_utils import load_roadmap, save_roadmap
 
 
 class DecoupledPRM(): 
@@ -206,22 +206,33 @@ class DecoupledPRM():
     
     # learning methods
     def load_roadmaps(self, roadmap_file):
-        for r_id in self.r_ids:
-            r_index = self.r_ids.index(r_id)
-            roadmap = load_roadmap(roadmap_file)
-            for i, q in enumerate(roadmap.keys()): 
+        for r_index, r_id in enumerate(self.r_ids):
+            filename = roadmap_file.replace('.csv', f'_robot_{r_index}.csv')
+            roadmap = load_roadmap(filename)
+            for i, q in enumerate(roadmap.keys()):
                 node = Node(i, np.round(np.array(q), 2))
                 self.node_lists[r_index].append(node)
                 self.edge_dicts[r_index].update({node.id: []})
             self.node_id_q_dicts[r_index] = self.generate_node_id_q_dict(self.node_lists[r_index])
             self.node_q_id_dicts[r_index] = self.generate_node_q_id_dict(self.node_lists[r_index])
-            for i, q in enumerate(roadmap.keys()): 
+            for i, q in enumerate(roadmap.keys()):
                 neighbors = roadmap[q]
-                for q in neighbors: 
+                for q in neighbors:
                     q = np.round(np.array(q), 2)
                     n_id = self.node_q_id_dicts[r_index][tuple(q)]
                     self.edge_dicts[r_index][i].append(n_id)
         return
+
+    def save_roadmaps(self, filename):
+        for r_index in range(len(self.r_ids)):
+            robot_filename = filename.replace('.csv', f'_robot_{r_index}.csv')
+            roadmap = {}
+            for node_id, neighbor_ids in self.edge_dicts[r_index].items():
+                q = tuple(self.node_id_q_dicts[r_index][node_id])
+                neighbor_qs = [tuple(self.node_id_q_dicts[r_index][n_id]) for n_id in neighbor_ids]
+                roadmap[q] = neighbor_qs
+            save_roadmap(roadmap, robot_filename)
+            print(f"Roadmap saved to {robot_filename}")
 
     def generate_roadmaps(self):
         for r_id in self.r_ids:
@@ -330,7 +341,11 @@ class DecoupledPRM():
         start_quat = p.getQuaternionFromEuler([np.radians(180), 0, 0])
         # goal_quat = panda_model.quaternion_from_fk(self.agents[r_index]['goal'])
         goal_quat = p.getQuaternionFromEuler([np.radians(180), 0, 0])
+        attempts = 0
         while len(samples) < n:
+            attempts += 1
+            if attempts % 50 == 0:
+                print(f"Sampling robot {r_id}: {len(samples)}/{n} found after {attempts} attempts")
             sample_pos = self.sample_task_space_position(start_pos, goal_pos)
             # sample_quat = self.sample_task_space_quaternion(start_quat, goal_quat)
             sample_quat = start_quat
@@ -964,12 +979,28 @@ class DecoupledPRM():
         candidate_neighbors = [(-dist, node) for dist, node in candidate_neighbors] # make dists >0 again
         candidate_neighbors = self.heapsort(candidate_neighbors)
         # Connect the k2 nearest neighbors, that can be connected with collision free edges
-        for _, neighbor in candidate_neighbors: # make sure the node itself is excluded
+        start_rejected_self = 0
+        start_rejected_obs = 0
+        for _, neighbor in candidate_neighbors:
             if len(self.edge_dicts[r_index][-1]) == self.k2:
                 break
             if self.is_collision_free_edge(start_config, neighbor.q, r_id):
                 self.edge_dicts[r_index][-1].append(neighbor.id)
                 self.edge_dicts[r_index][neighbor.id].append(-1)
+            else:
+                # diagnose why the edge failed
+                failed_self = False
+                q1, q2 = np.array(start_config), np.array(neighbor.q)
+                for t in np.arange(0, 1, self.local_step):
+                    s = q1 + t * (q2 - q1)
+                    if self.robot_self_collision(s, r_id):
+                        failed_self = True
+                        break
+                if failed_self:
+                    start_rejected_self += 1
+                else:
+                    start_rejected_obs += 1
+        print(f"Robot {r_id} start: {len(self.edge_dicts[r_index][-1])} edges | rejected self={start_rejected_self} obs={start_rejected_obs}")
         self.node_id_q_dicts[r_index].update({-1: tuple(start_config)})
         self.node_q_id_dicts[r_index].update({tuple(start_config): -1})
 
