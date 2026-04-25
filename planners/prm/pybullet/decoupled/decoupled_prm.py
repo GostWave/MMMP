@@ -19,6 +19,7 @@ import pybullet as p
 from scipy.spatial import KDTree
 from planners.prm.pybullet.utils import Node
 from robots.panda import Panda
+from robots.aubo import Aubo
 from utils.pb_data_utils import load_roadmap, save_roadmap
 
 
@@ -132,10 +133,7 @@ class DecoupledPRM():
     def create_c_spaces(self, robot_models):
         c_spaces = []
         for model in robot_models:
-            if isinstance(model, Panda):
-                c_spaces.append(model.arm_c_space)
-            else: 
-                c_spaces.append(model.c_space)
+            c_spaces.append(model.arm_c_space)
         return c_spaces
 
     @staticmethod
@@ -386,8 +384,12 @@ class DecoupledPRM():
     def sample_safe_poses(self, r_id, sigma=0.2):
         r_index = self.r_ids.index(r_id)
         model = self.robot_models[r_index]
+
+        if isinstance(model, Aubo):
+            return []
+
         # A selected set of 'safe' poses
-        
+
         # ee central 'safe' poses
         safe_pose1 = [0, -np.pi/4, 0, -3*np.pi/4, 0, np.pi/2, np.pi/4]
 
@@ -893,6 +895,8 @@ class DecoupledPRM():
     # Interpolation
     def find_q_in_q_t_interval_given_t(self, q1_t1, q2_t2, t):
         delta_t = q2_t2[-1] - q1_t1[-1]
+        if delta_t == 0:
+            return np.round(q1_t1[:-1], 2)
         x = (t - q1_t1[-1]) / delta_t
         return np.round(q1_t1[:-1] + (q2_t2[:-1] - q1_t1[:-1]) * x, 2)
     
@@ -1022,6 +1026,7 @@ class DecoupledPRM():
             if self.is_collision_free_edge(goal_config, neighbor.q, r_id):
                 self.edge_dicts[r_index][-2].append(neighbor.id) # needed for nn count
                 self.edge_dicts[r_index][neighbor.id].append(-2) # needed for search
+        print(f"Robot {r_id} goal:  {len(self.edge_dicts[r_index][-2])} edges")
         self.node_id_q_dicts[r_index].update({-2: tuple(goal_config)})
         self.node_q_id_dicts[r_index].update({tuple(goal_config): -2})
 
