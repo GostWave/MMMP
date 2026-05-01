@@ -60,9 +60,10 @@ class PrioritizedPRM(DecoupledPRM):
         order = np.argsort(priorities)[::-1]
         for priority_index in order:
             r_id = self.r_ids[priority_index]
-            id_path, st_path, l_t, q_t = self.query_robot(r_id, higher_priority_robot_paths=st_paths)
-            if not st_path:
-                return {}
+            result = self.query_robot(r_id, higher_priority_robot_paths=st_paths)
+            if not result:
+                return {}, total_l_t, total_q_t
+            id_path, st_path, l_t, q_t = result
             paths.update({r_id: id_path})
             st_paths.update({r_id: st_path})
             total_l_t += l_t

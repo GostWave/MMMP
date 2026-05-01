@@ -114,7 +114,10 @@ def main():
     directory = os.path.dirname(__file__)  # Get the directory of the current file
     relative_path = '../res/images/task_space_roadmap2_adjusted_pruned.csv'
     filename = os.path.join(directory, relative_path)
-    prm = CBSPRM(env, load_roadmap=filename, maxdist=0.1, k1=55, k2=50, build_type='n', prm_type='distance', n=20, t=10, time_step=0.01, local_step=0.02)
+    all_robot_files = all(os.path.exists(filename.replace('.csv', f'_robot_{i}.csv')) for i in range(len(agents)))
+    prm = CBSPRM(env, load_roadmap=filename if all_robot_files else None, maxdist=0.1, k1=55, k2=50, build_type='n', prm_type='distance', n=20, t=10, time_step=0.01, local_step=0.02)
+    if not all_robot_files:
+        prm.save_roadmaps(filename)
     learn_duration = time.time()-start_time
     print(f"Learning duration: {learn_duration}")
     # print(f"Edges: {prm.edge_dicts}")

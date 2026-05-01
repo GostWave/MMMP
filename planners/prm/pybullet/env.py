@@ -9,6 +9,8 @@ import pybullet as p
 
 from utils.pb_conf_utils import wait_for_duration, get_view_matrix
 from utils.traj_utils import calculate_lspb_trajectory, joint_positions_from_trajectories
+from robots.panda import Panda
+from robots.aubo import Aubo
 
 
 # Comes from CBSPRM
@@ -204,6 +206,32 @@ class Environment:
                 break
         return joint_positions
 
+    @staticmethod
+    def _get_robot_trajectory_limits(model):
+        if isinstance(model, Panda):
+            joint_limits = {
+                'q_max': [2.7437, 1.7837, 2.9007, -0.1518, 2.8065, 4.5169, 3.0159],
+                'q_min': [-2.7437, -1.7837, -2.9007, -3.0421, -2.8065, 0.5445, -3.0159]
+            }
+            velocity_limits     = np.array([2.62, 2.62, 2.62, 2.62, 5.26, 4.18, 5.26])
+            acceleration_limits = np.array([10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0])
+        elif isinstance(model, Aubo):
+            joint_limits = {
+                'q_max': [ 2 * np.pi] * 6,
+                'q_min': [-2 * np.pi] * 6
+            }
+            velocity_limits     = np.array([3.14, 3.14, 3.14, 3.14, 3.14, 3.14])
+            acceleration_limits = np.array([10.0, 10.0, 10.0, 10.0, 10.0, 10.0])
+        else:
+            n = model.arm_dimension
+            joint_limits = {
+                'q_max': [ 2 * np.pi] * n,
+                'q_min': [-2 * np.pi] * n
+            }
+            velocity_limits     = np.array([3.14] * n)
+            acceleration_limits = np.array([10.0] * n)
+        return joint_limits, velocity_limits, acceleration_limits
+
     def execute_smooth_motion(self, prm, id_paths, t_final=2.0, effort_factor=0.8):
         # Get waypoints from the paths
         waypoints = {r_id: [] for r_id in id_paths.keys()}
@@ -212,21 +240,20 @@ class Environment:
                 q = np.array(prm.node_id_q_dicts[prm.r_ids.index(r_id)][node])
                 waypoints[r_id].append(q)
 
-        # Joint limits for the Panda robot
-        joint_limits = {
-            'q_max': [2.7437, 1.7837, 2.9007, -0.1518, 2.8065, 4.5169, 3.0159],
-            'q_min': [-2.7437, -1.7837, -2.9007, -3.0421, -2.8065, 0.5445, -3.0159]
+        # Per-robot trajectory limits
+        limits = {
+            r_id: self._get_robot_trajectory_limits(prm.robot_models[prm.r_ids.index(r_id)])
+            for r_id in id_paths.keys()
         }
-        
-        # Velocity and acceleration limits
-        velocity_limits = np.array([2.62, 2.62, 2.62, 2.62, 5.26, 4.18, 5.26])  # rad/s
-        acceleration_limits = np.array([10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0])  # rad/s²
 
         # LSPB trajectories
-        trajectories = {r_id: calculate_lspb_trajectory(waypoints[r_id], t_final, effort_factor, joint_limits, velocity_limits, acceleration_limits) for r_id in id_paths.keys()}
+        trajectories = {
+            r_id: calculate_lspb_trajectory(waypoints[r_id], t_final, effort_factor, *limits[r_id])
+            for r_id in id_paths.keys()
+        }
 
         # Simulation parameters
-        time_step = 1.0 /30.0
+        time_step = 1.0 / 30.0
         p.setTimeStep(time_step)
 
         # Loop through trajectory points
@@ -234,14 +261,15 @@ class Environment:
         t_stop = trajectories[prm.r_ids[0]][0][-1].t2
         for t in np.linspace(t_start, t_stop, num=int((t_stop - t_start) / time_step)):
             for r_id in prm.r_ids:
+                model = prm.robot_models[prm.r_ids.index(r_id)]
                 joint_positions = joint_positions_from_trajectories(trajectories[r_id], t)
-                if len(joint_positions) != 7:
+                if len(joint_positions) != model.arm_dimension:
                     continue
-                p.setJointMotorControlArray(r_id, range(7), p.POSITION_CONTROL, joint_positions)
+                p.setJointMotorControlArray(r_id, model.arm_joints, p.POSITION_CONTROL, joint_positions)
                 p.stepSimulation()
                 time.sleep(time_step)
         return trajectories
-    
+
     def execute_smooth_motion_capturing_frames(self, prm, id_paths, t_final=2.0, effort_factor=0.8):
         # Get waypoints from the paths
         waypoints = {r_id: [] for r_id in id_paths.keys()}
@@ -250,18 +278,17 @@ class Environment:
                 q = np.array(prm.node_id_q_dicts[prm.r_ids.index(r_id)][node])
                 waypoints[r_id].append(q)
 
-        # Joint limits for the Panda robot
-        joint_limits = {
-            'q_max': [2.7437, 1.7837, 2.9007, -0.1518, 2.8065, 4.5169, 3.0159],
-            'q_min': [-2.7437, -1.7837, -2.9007, -3.0421, -2.8065, 0.5445, -3.0159]
+        # Per-robot trajectory limits
+        limits = {
+            r_id: self._get_robot_trajectory_limits(prm.robot_models[prm.r_ids.index(r_id)])
+            for r_id in id_paths.keys()
         }
-        
-        # Velocity and acceleration limits
-        velocity_limits = np.array([2.62, 2.62, 2.62, 2.62, 5.26, 4.18, 5.26])  # rad/s
-        acceleration_limits = np.array([10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0]) # rad/s²
 
         # LSPB trajectories
-        trajectories = {r_id: calculate_lspb_trajectory(waypoints[r_id], t_final, effort_factor, joint_limits, velocity_limits, acceleration_limits) for r_id in id_paths.keys()}
+        trajectories = {
+            r_id: calculate_lspb_trajectory(waypoints[r_id], t_final, effort_factor, *limits[r_id])
+            for r_id in id_paths.keys()
+        }
 
         # Simulation parameters
         time_step = 1.0 / 30.0
@@ -273,10 +300,11 @@ class Environment:
         frames = []
         for t in np.linspace(t_start, t_stop, num=int((t_stop - t_start) / time_step)):
             for r_id in prm.r_ids:
+                model = prm.robot_models[prm.r_ids.index(r_id)]
                 joint_positions = joint_positions_from_trajectories(trajectories[r_id], t)
-                if len(joint_positions) != 7:
+                if len(joint_positions) != model.arm_dimension:
                     continue
-                p.setJointMotorControlArray(r_id, range(7), p.POSITION_CONTROL, joint_positions)
+                p.setJointMotorControlArray(r_id, model.arm_joints, p.POSITION_CONTROL, joint_positions)
                 p.stepSimulation()
                 time.sleep(time_step)
                 img = self.capture_frame()

@@ -55,6 +55,7 @@ def main():
         print("5 - prioritized_prm.py")
         print("6 - trajectory_execution.py")
         print("7 - cbs_prm_scene.py")
+        print("8 - prioritized_prm_scene.py")
 
         file_choice = int(input("\nEnter the number of the file you would like to execute: "))
         if file_choice == 1:
@@ -69,8 +70,10 @@ def main():
             selected_file = "prioritized_prm"
         elif file_choice == 6:
             selected_file = "trajectory_execution"
-        elif file_choice ==7:
+        elif file_choice == 7:
             selected_file = "cbs_prm_scene"
+        elif file_choice == 8:
+            selected_file = "prioritized_prm_scene"
         else:
             raise ValueError("Invalid file choice. Exiting.")
     
